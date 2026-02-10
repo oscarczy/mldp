@@ -34,9 +34,9 @@ st.markdown(
     credit card payment** using a machine learning model trained on historical data.
 
     **Use cases**
-    - Early identification of high-risk customers  
-    - Credit limit review  
-    - Manual risk assessment support
+    - Early identification of high-risk default customers  
+    - Credit limit review/adjustment  
+    - Prioritisation for manual review
     """
 )
 
@@ -48,12 +48,12 @@ st.subheader("Customer Information")
 
 with st.form("risk_form"):
 
-    st.markdown("### Core Details")
+
     col1, col2, col3 = st.columns(3)
 
     with col2:
         LIMIT_BAL = st.number_input(
-            "Credit Limit (LIMIT_BAL)",
+            "Credit Limit (in NT$)",
             min_value=1000,
             step=1000
         )
@@ -66,18 +66,38 @@ with st.form("risk_form"):
             max_value=100
         )
 
-    # Repayment History (3 columns)
-    st.markdown("### Repayment History (Previous Months)")
+    # Payment Delay History (3 columns)
+
+    repayment_help = """
+Repayment Status Definition:
+
+-1 : Paid duly
+
+ 1 : Payment delay for one month
+
+ 2 : Payment delay for two months
+
+so on and so forth...
+
+ 7 : Payment delay for seven months
+
+ 8 : Payment delay for eight months
+
+ 9 : Payment delay for nine months and above
+
+"""
+
+    st.markdown("### Payment Delay History (Last 6 Months)", help=repayment_help)
     r1, r2, r3 = st.columns(3)
 
-    PAY_0 = r1.number_input("PAY_0", min_value=-2, max_value=9, value=0)
-    PAY_2 = r2.number_input("PAY_2", min_value=-2, max_value=9, value=0)
-    PAY_3 = r3.number_input("PAY_3", min_value=-2, max_value=9, value=0)
+    PAY_0 = r1.number_input("Month 1", min_value=-1, max_value=9, value=0,)
+    PAY_2 = r2.number_input("Month 2", min_value=-1, max_value=9, value=0,)
+    PAY_3 = r3.number_input("Month 3", min_value=-1, max_value=9, value=0,)
 
     r4, r5, r6 = st.columns(3)
-    PAY_4 = r4.number_input("PAY_4", min_value=-2, max_value=9, value=0)
-    PAY_5 = r5.number_input("PAY_5", min_value=-2, max_value=9, value=0)
-    PAY_6 = r6.number_input("PAY_6", min_value=-2, max_value=9, value=0)
+    PAY_4 = r4.number_input("Month 4", min_value=-1, max_value=9, value=0,)
+    PAY_5 = r5.number_input("Month 5", min_value=-1, max_value=9, value=0,)
+    PAY_6 = r6.number_input("Month 6", min_value=-1, max_value=9, value=0,)
 
 
     # Bill Amounts (3 columns)
@@ -184,7 +204,7 @@ if submitted:
     st.markdown(
         """
         **Interpretation**
-        - Higher probability indicates higher likelihood of default.
+        - Higher probability indicates higher likelihood of defaulting.
         - Intended for **risk ranking**, not automatic rejection.
         """
     )
@@ -192,8 +212,8 @@ if submitted:
     with st.expander("How this score should be used"):
         st.markdown(
             """
-            - High-risk customers may be prioritised for manual review  
-            - Credit limits can be adjusted proactively  
+            - High-risk customers may be prioritised for a manual review  
+            - Credit limits can be adjusted proactively and according to risk 
             - Supports risk-based decision-making
             """
         )
