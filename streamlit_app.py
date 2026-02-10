@@ -189,15 +189,15 @@ if submitted:
 
     # Output Results
     st.divider()
-    st.subheader("Risk Assessment Result")
+    st.subheader("Default Risk Assessment Result")
 
     if prediction == 1:
-        st.error("High Risk of Default")
+        st.error("High Risk of Defaulting")
     else:
-        st.success("Low Risk of Default")
+        st.success("Low Risk of Defaulting")
 
     st.metric(
-        label="Probability of Default",
+        label="Probability of Defaulting",
         value=f"{probability:.2%}"
     )
 
